@@ -1,26 +1,16 @@
-<!-- <form th:action="@{~/category/save}" th:object="${category}" method="post">
-    <input type="hidden" name="id" id="id" th:field="*{id}">
-    <div class="mb-3">
-        <label for="categoryName" class="form-label">Category Name</label>
-        <input type="text" class="form-control" name="name" id="categoryName" placeholder="Input Category Name" th:field="*{name}">
-    </div>
-    <button type="submit" class="btn btn-primary" style="float: right;">Save</button>
-</form> -->
-
-
-<form th:action="@{~/category/save}" th:object="${category}" id="categoryForm" method="post">
+<form id="categoryForm" onsubmit="saveCategory()">
+    <!-- method="post" -->
     <div data-mdb-input-init class="form-outline mb-4">
         <label class="form-label" for="name">Name</label>
-        <input required type="text" id="name" name="name" class="form-control" autocomplete="off" th:field="*{name}" />
+        <input required type="text" id="name" name="name" class="form-control" autocomplete="off" />
     </div>
     <div class="form-outline mb-4">
         <label class="form-label" for="createdBy">Created by</label>
-        <input required type="text" id="createdBy" name="createdBy" class="form-control" th:field="*{createdBy}" />
+        <input required type="text" id="createdBy" name="createdBy" class="form-control" />
     </div>
-    <input type="hidden" id="categoryId" name="id" autocomplete="off" th:field="*{id}" />
-    <input type="hidden" id="createdAt" name="createdAt" autocomplete="off" th:field="*{createdAt}" />
+    <input type="hidden" id="categoryId" name="id" autocomplete="off" />
+    <input type="hidden" id="createdAt" name="createdAt" autocomplete="off" />
     <label class="form-label" for="isDeleted">Is Data Deleted?</label>
     <input type="checkbox" class="form-check-input" style="border: 1px solid #000;" id="isDeleted" name="deleted"
-        autocomplete="off" th:field="*{deleted}" />
-
+        autocomplete="off" />
 </form>

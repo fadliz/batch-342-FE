@@ -23,34 +23,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="align-middle" th:each="category, iter : ${categories}">
-                        <th scope="row" th:text="${iter.count}"></th>
-                        <td th:text="${category.slug}"></td>
-                        <td th:text="${category.name}"></td>
-                        <td th:text="${category.createdBy}"></td>
-                        <td class="text-center">
-                            <input disabled type="checkbox" class="form-check-input" style="border: 1px solid #000;"
-                                id="isDeleted" name="deleted" autocomplete="off" th:checked="*{category.isDeleted}" />
-                        </td>
-                        <td >
-                        <button type="button" class="btn btn-warning" th:onclick="editForm([[${category.id}]])">
-                            Edit
-                        </button>
-                        <button type="button" class="btn btn-danger" th:onclick="deleteForm([[${category.id}]])">
-                            Delete
-                        </button>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="myModalLabel">Modal title</h1>
+                        <h1 class="modal-title fs-5" id="categoryModalLabel">Modal title</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
