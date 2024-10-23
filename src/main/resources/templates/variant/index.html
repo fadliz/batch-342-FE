@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/main}">
+
+<body>
+    <section layout:fragment="container">
+        <div class="container mt-3">
+            <h1 th:text="${title}"></h1>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mt-1 mb-3" onclick="openForm()">
+                Add Variant Data
+            </button>
+
+            <table class="table table-bordered table-striped table-hover table-sm">
+                <thead>
+                    <tr class="align-middle">
+                        <th scope="col">#</th>
+                        <th scope="col">Slug</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Created By</th>
+                        <th scope="col">Is Deleted</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="align-middle" th:each="variant, iter : ${variants}">
+                        <th scope="row" th:text="${iter.count}"></th>
+                        <td th:text="${variant.slug}"></td>
+                        <td th:text="${variant.name}"></td>
+                        <td th:text="${variant.product.name}"></td>
+                        <td th:text="${variant.description}"></td>
+                        <td th:text="${variant.price}"></td>
+                        <td th:text="${variant.stock}"></td>
+                        <td th:text="${variant.createdBy}"></td>
+                        <td class="text-center">
+                            <input disabled type="checkbox" class="form-check-input" style="border: 1px solid #000;"
+                                id="isDeleted" name="deleted" autocomplete="off" th:checked="${variant.isDeleted}" />
+                        </td>
+                        <td>
+                            <button id="variantEditBtn" type="button" class="btn btn-warning" th:onclick="editForm([[${variant.id}]])">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-danger" th:onclick="deleteForm([[${variant.id}]])">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="variantModal" tabindex="-1" aria-labelledby="variantModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="variantModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <p id="modalParagraph"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="saveButton" class="btn btn-primary">Save changes</button>
+                        <button type="button" id="cancelButton" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="deleteButton" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/variant.js"></script>
+    </section>
+</body>
+
+</html>

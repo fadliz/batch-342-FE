@@ -1,0 +1,7 @@
+<p>Are you sure you want to delete this??</p>
+Variant Name: <span th:text="${variant.name}"></span><br>
+Product Name: <span th:text="${variant.product.name}"></span><br>
+Category Name: <span th:text="${variant.product.category.name}"></span><br>
+Slug: <span th:text="${variant.slug}"></span><br>
+Created By: <span th:text="${variant.createdBy}"></span><br>
+<input type="hidden" id="deleteVariantId" name="id" autocomplete="off" th:value="*{id}"/>

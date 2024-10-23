@@ -1,0 +1,24 @@
+<form th:action="@{~/product/save}" th:object="${product}" id="productForm" method="post">
+    <div class="form-outline mb-4">
+        <label class="form-label" for="categoryId">Category</label>
+        <select class="form-select" name="categoryId" id="categoryId" required>
+            <option value="" selected disabled hidden>Choose here</option>
+            <option th:each="i : ${categories}" th:value="${i.id}" th:text="${i.name}"
+                th:selected="${i.id == product.categoryId}"></option>
+        </select>
+    </div>
+    <div data-mdb-input-init class="form-outline mb-4">
+        <label class="form-label" for="name">Name</label>
+        <input required type="text" id="name" name="name" class="form-control" autocomplete="off" th:field="*{name}" />
+    </div>
+    <div class="form-outline mb-4">
+        <label class="form-label" for="createdBy">Created by</label>
+        <input required type="text" id="createdBy" name="createdBy" class="form-control" th:field="*{createdBy}" />
+    </div>
+    <input type="hidden" id="productId" name="id" autocomplete="off" th:field="*{id}" />
+    <input type="hidden" id="createdAt" name="createdAt" autocomplete="off" th:field="*{createdAt}" />
+    <label class="form-label" for="isDeleted">Is Data Deleted?</label>
+    <input type="checkbox" class="form-check-input" style="border: 1px solid #000;" id="isDeleted" name="deleted"
+        autocomplete="off" th:field="*{deleted}" />
+
+</form>

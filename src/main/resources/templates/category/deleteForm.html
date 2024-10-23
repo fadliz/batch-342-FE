@@ -1,0 +1,5 @@
+<p>Are you sure you want to delete this??</p>
+Category Name: <span th:text="${category.name}"></span><br>
+Slug: <span th:text="${category.slug}"></span><br>
+Created By: <span th:text="${category.createdBy}"></span><br>
+<input type="hidden" id="deleteCategoryId" name="id" autocomplete="off" th:value="*{id}"/>
