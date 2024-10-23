@@ -13,21 +13,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
 // ensuring that any associated logic runs before actually submitting the form.
 // If the event is not canceled (defaultPrevented is false)
 // , we can then proceed to call form.submit() to submit the form.
-document.getElementById("saveButton").addEventListener("click", function () {
-  const form = document.getElementById("categoryForm");
-  if (form.checkValidity()) {
-    const submitEvent = new Event("submit", {
-      bubbles: true,
-      cancelable: true,
-    });
-    form.dispatchEvent(submitEvent);
-    if (!submitEvent.defaultPrevented) {
-      form.submit();
-    }
-  } else {
-    form.reportValidity();
-  }
-});
+
+// document.getElementById("saveButton").addEventListener("click", function () {
+//   const form = document.getElementById("categoryForm");
+//   const modalTitle = document.getElementById("categoryModalLabel");
+//   if (form.checkValidity()) {
+//     if (modalTitle === "Add Category") {
+//       saveCategory();
+//     } else if (modalTitle === "Edit Category") {
+//       editCategory();
+//     }
+//   } else {
+//     form.reportValidity();
+//   }
+// });
 
 document.getElementById("deleteButton").addEventListener("click", function () {
   const categoryId = document.getElementById("deleteCategoryId").value; // Get the category ID
@@ -63,11 +62,11 @@ function populateTable(categories) {
         <td >${category.createdBy}</td>
         <td class="text-center">
             <input disabled type="checkbox" class="form-check-input" style="border: 1px solid #000;"
-            id="isDeleted" name="deleted" autocomplete="off" ${isChecked}/>
+            name="deleted" autocomplete="off" ${isChecked}/>
         </td>
         <td>
-            <button class="btn btn-warning" onclick="editCategory(${category.id})">Edit</button>
-            <button class="btn btn-danger" onclick="deleteCategory(${category.id})">Delete</button>
+            <button class="btn btn-warning" onclick="openForm('Edit Category','edit','${category.slug}')">Edit</button>
+            <button class="btn btn-danger" onclick="deleteCategory('${category.slug}')">Delete</button>
         </td>
     `;
 
@@ -75,7 +74,7 @@ function populateTable(categories) {
   });
 }
 
-function openForm() {
+function openForm(title,type, slug = null) {
   deleteButton.classList.add("d-none");
   saveButton.classList.remove("d-none");
   $.ajax({
@@ -84,46 +83,68 @@ function openForm() {
     contentType: "html",
     success: function (categoryForm) {
       $("#categoryModal").modal("show");
-      $(".modal-title").html("Category Form");
+      $(".modal-title").html(title);
       $(".modal-body").html(categoryForm);
     },
   });
+
+  if (type === "add") {
+    saveButton.textContent = "Save Changes";
+    saveButton.onclick = function () {
+      submitCategoryForm("POST", "http://localhost:9001/api/category");
+    };
+  } else if (type === "edit") {
+    saveButton.textContent = "Update Category";
+    loadEditForm(slug);
+    saveButton.onclick = function () {
+      submitCategoryForm("PUT", `http://localhost:9001/api/category/slug=${slug}`);
+    };
+  }
+
 }
 
-function saveCategory() {
-  const form = document.getElementById("categoryForm");
-  const formData = new FormData(form);
+function submitCategoryForm(method, url) {
+  const formData = new FormData(document.getElementById("categoryForm"));
   const data = Object.fromEntries(formData.entries());
+  if (data.deleted === undefined) {
+    data.deleted = false;
+  } else {
+    data.deleted = true;
+  }
   const dataJson = JSON.stringify(data);
+  console.log(dataJson);
+  console.log(data.deleted)
   $.ajax({
-    type: "post",
-    url: "http://localhost:9001/api/category",
+    type: method,
+    url: url,
     data: dataJson,
     contentType: "application/json",
-    success: function (categoryResponse) {
-      console.log(categoryResponse);
+    success: function (response) {
+      console.log(response);
+      window.location.reload();
     },
     error: function (xhr, status, error) {
       console.log(xhr.responseText);
-    },
+      alert("Error submitting form");
+    }
   });
 }
 
-function editCategory(id) {
-  openForm();
+function loadEditForm(slug) {
   $.ajax({
     type: "get",
-    url: `http://localhost:9001/api/category/${id}`,
+    url: `http://localhost:9001/api/category/slug=${slug}`,
     contentType: "application/json",
     success: function (categoryResponse) {
       console.log(categoryResponse);
       let categoryData = categoryResponse.data;
-      populateForm(categoryData);
+      populateEditForm(categoryData);
     },
   });
+  
 }
 
-function populateForm(category) {
+function populateEditForm(category) {
     // Set values for text inputs and hidden fields
     document.getElementById("categoryId").value = category.id;
     document.getElementById("name").value = category.name;
