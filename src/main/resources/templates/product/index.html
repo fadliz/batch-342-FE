@@ -7,7 +7,7 @@
         <div class="container mt-3">
             <h1 th:text="${title}"></h1>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary mt-1 mb-3" onclick="openForm()">
+            <button type="button" class="btn btn-primary mt-1 mb-3" onclick="openForm('Add Product','add')">
                 Add Product Data
             </button>
 
@@ -24,25 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="align-middle" th:each="product, iter : ${products}">
-                        <th scope="row" th:text="${iter.count}"></th>
-                        <td th:text="${product.slug}"></td>
-                        <td th:text="${product.name}"></td>
-                        <td th:text="${product.category.name}"></td>
-                        <td th:text="${product.createdBy}"></td>
-                        <td class="text-center">
-                            <input disabled type="checkbox" class="form-check-input" style="border: 1px solid #000;"
-                                id="isDeleted" name="deleted" autocomplete="off" th:checked="*{product.isDeleted}" />
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-warning" th:onclick="editForm([[${product.id}]])">
-                                Edit
-                            </button>
-                            <button type="button" class="btn btn-danger" th:onclick="deleteForm([[${product.id}]])">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
+                    
                 </tbody>
             </table>
         </div>

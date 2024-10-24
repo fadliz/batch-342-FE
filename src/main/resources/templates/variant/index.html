@@ -7,7 +7,7 @@
         <div class="container mt-3">
             <h1 th:text="${title}"></h1>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary mt-1 mb-3" onclick="openForm()">
+            <button type="button" class="btn btn-primary mt-1 mb-3" onclick="openForm('Add Variant','add')">
                 Add Variant Data
             </button>
 
@@ -27,28 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="align-middle" th:each="variant, iter : ${variants}">
-                        <th scope="row" th:text="${iter.count}"></th>
-                        <td th:text="${variant.slug}"></td>
-                        <td th:text="${variant.name}"></td>
-                        <td th:text="${variant.product.name}"></td>
-                        <td th:text="${variant.description}"></td>
-                        <td th:text="${variant.price}"></td>
-                        <td th:text="${variant.stock}"></td>
-                        <td th:text="${variant.createdBy}"></td>
-                        <td class="text-center">
-                            <input disabled type="checkbox" class="form-check-input" style="border: 1px solid #000;"
-                                id="isDeleted" name="deleted" autocomplete="off" th:checked="${variant.isDeleted}" />
-                        </td>
-                        <td>
-                            <button id="variantEditBtn" type="button" class="btn btn-warning" th:onclick="editForm([[${variant.id}]])">
-                                Edit
-                            </button>
-                            <button type="button" class="btn btn-danger" th:onclick="deleteForm([[${variant.id}]])">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -62,12 +41,13 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        
+
                         <p id="modalParagraph"></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="saveButton" class="btn btn-primary">Save changes</button>
-                        <button type="button" id="cancelButton" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="cancelButton" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
                         <button type="button" id="deleteButton" class="btn btn-danger">Delete</button>
                     </div>
                 </div>
