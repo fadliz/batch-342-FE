@@ -1,0 +1,60 @@
+<div th:fragment="payment">
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="paymentModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="variantForm">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="categoryId">Category</label>
+                            <select class="form-select" name="categoryId" id="categoryId"
+                                onchange="loadProducts(this.value)" required>
+                            </select>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="productId">Product</label>
+                            <select class="form-select" name="productId" id="productId" required>
+                                <option value="" selected disabled hidden>Choose here</option>
+                            </select>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="name">Name</label>
+                            <input required type="text" id="name" name="name" class="form-control" autocomplete="off" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="description">Description</label>
+                            <input type="text" id="description" name="description" class="form-control"
+                                autocomplete="off" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="price">Price</label>
+                            <input required type="number" id="price" name="price" class="form-control" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="stock">Stock</label>
+                            <input required type="number" id="stock" name="stock" class="form-control" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="createdBy">Created by</label>
+                            <input required type="text" id="createdBy" name="createdBy" class="form-control" />
+                        </div>
+                        <input type="hidden" id="variantId" name="id" autocomplete="off" />
+                        <label class="form-label" for="isDeleted">Is Data Deleted?</label>
+                        <input type="checkbox" class="form-check-input" style="border: 1px solid #000;" id="isDeleted"
+                            name="deleted" autocomplete="off" />
+                    </form>
+                    <p id="modalParagraph"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveButton" class="btn btn-primary">Save changes</button>
+                    <button type="button" id="cancelButton" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="deleteButton" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
