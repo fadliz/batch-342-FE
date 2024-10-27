@@ -5,17 +5,26 @@
 <body>
     <section layout:fragment="container">
         <div class="container mt-3">
-            <h1 th:text="${title}"></h1>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary mt-1 mb-3" onclick="openNewOrderModal()">
-                New Order
-            </button>
-            <button type="button" class="btn btn-primary mt-1 mb-3" onclick="openPaymentModal()">
-                Payment
-            </button>
-            <button type="button" class="btn btn-primary mt-1 mb-3" onclick="">
-                New Transaction
-            </button>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <button type="button" id="newOrderBtn" class="btn btn-primary mt-1 mb-3 disabled"
+                        onclick="openNewOrderModal()">
+                        New Order
+                    </button>
+                    <button type="button" id="paymentBtn" class="btn btn-primary mt-1 mb-3 disabled"
+                        onclick="openPaymentModal()">
+                        Payment
+                    </button>
+                    <button type="button" id="transactionBtn" class="btn btn-primary mt-1 mb-3" onclick="startTransaction()">
+                        New Transaction
+                    </button>
+                </div>
+                <div>
+                    <input required type="text" id="reference" name="reference"
+                        class="form-control form-control-sm " autocomplete="off" placeholder="reference" />
+                </div>
+            </div>
+
 
             <table class="table table-bordered table-hover table-sm">
                 <thead>
@@ -27,13 +36,14 @@
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <div th:insert="~{transaction/order :: order}"></div>
-                    <div th:insert="~{transaction/payment :: payment}"></div>
+                <tbody id="orderTableInput">
+
                 </tbody>
             </table>
         </div>
 
+        <div th:insert="~{transaction/order :: order}"></div>
+        <div th:insert="~{transaction/payment :: payment}"></div>
         <script src="js/transaction.js"></script>
     </section>
 </body>
