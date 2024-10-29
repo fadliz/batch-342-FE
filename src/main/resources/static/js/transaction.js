@@ -3,6 +3,7 @@ const paymentBtn = document.getElementById("paymentBtn");
 const transactionBtn = document.getElementById("transactionBtn");
 const payButton = document.getElementById("payButton");
 let variantData = [];
+let timeout;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   loadVariants();
@@ -17,6 +18,7 @@ function openPaymentModal() {
   populatePaymentModal();
   payButton.onclick = function () {
     submitPaymentForm();
+    payButton.classList.add("disabled");
   };
 }
 
@@ -83,10 +85,10 @@ function moveToTable(btn, variantId) {
               variant.price
             }"/>
           <td>
-            <input required type="number" id="quantity" name="quantity" class="form-control form-control-sm" autocomplete="off" value="1" min=1
-            placeholder="Input Quantity" onchange="loadAmount(this.value, ${
+            <input required type="number" id="quantity" name="quantity" class="form-control form-control-sm" autocomplete="off" value=1 min=1
+            max=${variant.stock} placeholder="Input Quantity" onchange="loadAmount(${
               variant.price
-            }, this)" onkeyup="loadAmount(this.value, ${variant.price}, this)"/>
+            }, this)" onkeyup="loadAmount(${variant.price}, this)"/>
           </td>
           <td >
             <input readonly required type="number" id="price" name="price" class="form-control form-control-sm" autocomplete="off" value="${
@@ -136,7 +138,20 @@ function generateReference() {
   });
 }
 
-function loadAmount(quantity, price, product) {
+function enforceMinMax(el) {
+  if (el.value != "") {
+    if (parseInt(el.value) < parseInt(el.min)) {
+      el.value = el.min;
+    }
+    if (parseInt(el.value) > parseInt(el.max)) {
+      el.value = el.max;
+    }
+  }
+  return el.value;
+}
+
+function loadAmount(price, product) {
+  let quantity = enforceMinMax(product);
   product.closest("tr").querySelector("#price").value = quantity * price;
   loadTotal();
 }
@@ -147,7 +162,8 @@ function loadTotal() {
   let totalQuantity = 0;
   let totalAmount = 0;
   quantityInputs.forEach((quantity) => {
-    totalQuantity += parseInt(quantity.value);
+    totalQuantity +=
+      parseInt(quantity.value) > 0 ? parseInt(quantity.value) : 0;
   });
 
   priceInputs.forEach((prices) => {
@@ -187,59 +203,53 @@ function getTableData() {
 }
 
 function populatePaymentModal() {
-  $("#reference").val(document.getElementById("generatedReference").value);
   $("#bill").val(document.getElementById("amount").value);
 }
 
 function loadChange(payment) {
   let bill = $("#bill").val();
   $("#change").val(payment - bill);
+  if (payment - bill >= 0) {
+    payButton.classList.remove("disabled");
+  } else {
+    payButton.classList.add("disabled");
+  }
 }
 
 function submitPaymentForm() {
-  createOrderHeader("POST", "http://localhost:9001/api/order-header");
-  
+  processTransaction("POST", "http://localhost:9001/api/transaction");
 }
 
-function createOrderHeader(method, url) {
-  const formData = new FormData(document.getElementById("paymentForm"));
+// TODO: Combine order header and order detail into one transaction
+// TODO: get variants stock from repository
+// TODO: add how many stock left from transaction if succesful to transaction payload
 
+function processTransaction(method, url) {
+  const formData = new FormData(document.getElementById("paymentForm"));
+  let genReference = document.getElementById("generatedReference");
   formData.append("createdBy", "Admin");
+  formData.append("reference", genReference.value);
   const data = Object.fromEntries(formData.entries());
   if (data.deleted === undefined) {
     data.deleted = false;
   } else {
     data.deleted = true;
   }
-  const jsonData = JSON.stringify(data);
-  $.ajax({
-    type: method,
-    url: url,
-    data: jsonData,
-    contentType: "application/json",
-    success: function (response) {
-      createOrderDetail("POST", "http://localhost:9001/api/order-detail/orders", response.data);
-    },
-    error: function (xhr, status, error) {
-      console.log(xhr.responseText);
-      alert("Error submitting form");
-    },
-  });
-}
 
-function createOrderDetail(method, url, createdOrderHeader) {
   const tabData = getTableData().entries();
   let orderDetails = [];
   tabData.forEach((data) => {
-    data[1]["createdBy"] = createdOrderHeader.createdBy;
-    data[1]["headerId"] = createdOrderHeader.id;
-    console.log(data[1]);
-    orderDetails.push(data[1]);
+    data[1]["createdBy"] = "Admin";
+    if (data[1]["price"] > 0) {
+      orderDetails.push(data[1]);
+    }
   });
+
   const jsonData = {
-    orderDetails,
+    orderHeader: data,
+    orderDetails: orderDetails,
   };
-  console.log(JSON.stringify(jsonData));
+
   $.ajax({
     type: method,
     url: url,
@@ -247,11 +257,16 @@ function createOrderDetail(method, url, createdOrderHeader) {
     contentType: "application/json",
     success: function (response) {
       console.log(response);
-      window.location.reload();
+      timeout = setTimeout(function () {
+        window.location.reload(1);
+      }, 3000);
+      // window.location.reload();
     },
     error: function (xhr, status, error) {
       console.log(xhr.responseText);
       alert("Error submitting form");
     },
   });
+  $("#reference").val(genReference.value);
+  $("#paymentModalLabel").html("Payment: Terima Kasih!");
 }

@@ -5,23 +5,23 @@
 <body>
     <section layout:fragment="container">
         <div class="container mt-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <button type="button" id="newOrderBtn" class="btn btn-primary mt-1 mb-3 disabled"
+            <div class="d-flex justify-content-between align-items-center bg-primary rounded">
+                <div >
+                    <button type="button" id="newOrderBtn" class="btn btn-warning disabled ms-3"
                         onclick="openNewOrderModal()">
                         New Order
                     </button>
-                    <button type="button" id="paymentBtn" class="btn btn-primary mt-1 mb-3 disabled"
+                    <button type="button" id="paymentBtn" class="btn btn-success disabled ms-1"
                         onclick="openPaymentModal()">
                         Payment
                     </button>
-                    <button type="button" id="transactionBtn" class="btn btn-primary mt-1 mb-3" onclick="startTransaction()">
+                    <button type="button" id="transactionBtn" class="btn btn-secondary ms-1" onclick="startTransaction()">
                         New Transaction
                     </button>
                 </div>
-                <div>
+                <div class="m-3">
                     <input required readonly type="text" id="generatedReference" 
-                        class="form-control form-control-sm " autocomplete="off" placeholder="reference" />
+                        class="form-control form-control-sm" autocomplete="off" placeholder="reference" />
                 </div>
             </div>
 
